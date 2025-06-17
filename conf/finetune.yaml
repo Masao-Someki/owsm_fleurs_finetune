@@ -3,17 +3,13 @@ seed: 2024
 num_workers: 1
 ngpu: 1
 batch_type: unsorted
-batch_size: 1
+batch_size: 4
 accum_grad: 1
 max_epoch: 20
 log_interval: 100
 keep_nbest_models: 10
 use_amp: false
 multiple_iterator: false
-
-feats_normalize: utterance_mvn
-model_conf:
-    extract_feats_in_collect_stats: false
 
 optim: adamw
 optim_conf:
