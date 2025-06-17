@@ -19,7 +19,11 @@ if __name__ == "__main__":
     # Load dataset
     fleurs_language = "en_us"
     owsm_language = "eng"
-    europarl_test = datasets.load_dataset("google/fleurs", fleurs_language)["test"]
+    europarl_test = datasets.load_dataset(
+        "google/fleurs",
+        fleurs_language,
+        trust_remote_code=True,
+    )["test"]
 
     # Load pretrained model
     pretrained_model = Speech2Text.from_pretrained(
