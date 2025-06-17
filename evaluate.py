@@ -28,19 +28,18 @@ if __name__ == "__main__":
     # Load pretrained model
     pretrained_model = Speech2Text.from_pretrained(
         args.model_name,
+        device="cuda"
     )
 
     # Evaluate fine-tuned model
     sample = europarl_test[0]
-    pretrained_model.s2t_model.cuda()
-    pretrained_model.device = "cuda"
 
     # Evaluate original model
     # pretrained_model.s2t_model.load_state_dict(torch.load("original.pth"))
     pred = pretrained_model(sample["audio"]["array"])
     print("Original Model")
     print("PREDICTED:", pred[0][3])
-    print("REFERENCE:", sample["text_ctc"])
+    print("REFERENCE:", sample["transcription"])
 
     # Evaluate fine-tuned model
     pretrained_model.s2t_model.load_state_dict(torch.load(Path(args.output_dir) / "1epoch.pth"))
