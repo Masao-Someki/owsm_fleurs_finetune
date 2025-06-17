@@ -13,8 +13,7 @@ if __name__ == "__main__":
     parser.add_argument("--model_name", type=str, default="espnet/owsm_v4_base_102M")
     parser.add_argument("--exp_dir", type=str, default="./exp/finetune")
     parser.add_argument("--src", type=str, default="de")
-    parser.add_argument("--trg", dtype=str, default="en")
-    parser.add_argument("--debug_sample", action="store_true")
+    parser.add_argument("--trg", type=str, default="en")
     args = parser.parse_args()
 
     # Load dataset
@@ -27,23 +26,22 @@ if __name__ == "__main__":
         args.model_name,
     )
 
-    if args.debug_sample:
-        # Evaluate fine-tuned model
-        id, sample = europarl_test[0]
-        pretrained_model.s2t_model.cuda()
-        pretrained_model.device = "cuda"
+    # Evaluate fine-tuned model
+    sample = europarl_test[0]
+    pretrained_model.s2t_model.cuda()
+    pretrained_model.device = "cuda"
 
-        # Evaluate original model
-        pretrained_model.s2t_model.load_state_dict(torch.load("original.pth"))
-        pred = pretrained_model(sample["audio"]["array"])
-        print("Original Model")
-        print("PREDICTED:", pred[0][3])
-        print("REFERENCE:", sample["text_raw"])
+    # Evaluate original model
+    # pretrained_model.s2t_model.load_state_dict(torch.load("original.pth"))
+    pred = pretrained_model(sample["audio"]["array"])
+    print("Original Model")
+    print("PREDICTED:", pred[0][3])
+    print("REFERENCE:", sample["text_ctc"])
 
-        # Evaluate fine-tuned model
-        pretrained_model.s2t_model.load_state_dict(torch.load(Path(args.output_dir) / "1epoch.pth"))
-        pred = pretrained_model(sample["audio"]["array"])
-        print("\nFine-tuned Model")
-        print("PREDICTED:", pred[0][3])
-        print("REFERENCE:", sample["text_raw"])
+    # Evaluate fine-tuned model
+    pretrained_model.s2t_model.load_state_dict(torch.load(Path(args.output_dir) / "1epoch.pth"))
+    pred = pretrained_model(sample["audio"]["array"])
+    print("\nFine-tuned Model")
+    print("PREDICTED:", pred[0][3])
+    print("REFERENCE:", sample["text_ctc"])
 
