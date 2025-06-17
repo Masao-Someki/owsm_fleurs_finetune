@@ -5,11 +5,12 @@ ngpu: 1
 batch_type: unsorted
 batch_size: 4
 accum_grad: 1
-max_epoch: 20
+max_epoch: 3
 log_interval: 100
 keep_nbest_models: 10
 use_amp: false
 multiple_iterator: false
+num_iters_per_epoch: 500
 
 optim: adamw
 optim_conf:
@@ -18,6 +19,9 @@ optim_conf:
 scheduler: steplr
 scheduler_conf:
     step_size: 1000
+
+encoder_conf:
+    gradient_checkpoint_layers: null
 
 specaug: specaug
 specaug_conf:
