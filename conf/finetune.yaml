@@ -14,11 +14,12 @@ num_iters_per_epoch: 500
 
 optim: adamw
 optim_conf:
-    lr: 0.0001
+    lr: 0.00005
     weight_decay: 0.000001
-scheduler: steplr
+scheduler: warmuplr
 scheduler_conf:
-    step_size: 1000
+    warmup_steps: 6000
+
 
 encoder_conf:
     gradient_checkpoint_layers: null
