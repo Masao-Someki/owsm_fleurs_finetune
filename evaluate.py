@@ -2,7 +2,7 @@ import argparse
 from pathlib import Path
 
 import torch
-from dataset.dataset import EuroparlSTDataset
+import datasets
 
 from espnet2.bin.s2t_inference import Speech2Text
 
@@ -18,7 +18,9 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     # Load dataset
-    europarl_test = EuroparlSTDataset(split=f"{args.src}_{args.trg}_test")
+    fleurs_language = "en_us"
+    owsm_language = "eng"
+    europarl_test = datasets.load_dataset("google/fleurs", fleurs_language)["test"]
 
     # Load pretrained model
     pretrained_model = Speech2Text.from_pretrained(
@@ -33,14 +35,14 @@ if __name__ == "__main__":
 
         # Evaluate original model
         pretrained_model.s2t_model.load_state_dict(torch.load("original.pth"))
-        pred = pretrained_model(sample["speech"])
+        pred = pretrained_model(sample["audio"]["array"])
         print("Original Model")
         print("PREDICTED:", pred[0][3])
         print("REFERENCE:", sample["text_raw"])
 
         # Evaluate fine-tuned model
         pretrained_model.s2t_model.load_state_dict(torch.load(Path(args.output_dir) / "1epoch.pth"))
-        pred = pretrained_model(sample["speech"])
+        pred = pretrained_model(sample["audio"]["array"])
         print("\nFine-tuned Model")
         print("PREDICTED:", pred[0][3])
         print("REFERENCE:", sample["text_raw"])
