@@ -8,6 +8,10 @@ import espnetez as ez
 from espnet2.bin.s2t_inference import Speech2Text
 
 
+import logging
+logging.basicConfig(level=logging.INFO)
+
+
 def tokenize_fn(text, tokenizer, converter):
     return np.array(converter.tokens2ids(tokenizer.text2tokens(text)))
 
